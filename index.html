@@ -1,19 +1,70 @@
 <!DOCTYPE html>
-<html lang="Pt-br">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gestão de condominio</title>
+    <title>Gestão de Condomínio</title>
 </head>
 <body>
-    <h1>condominio</h1>
+    <h1>Condomínio</h1>
+ 
     <h2>Pesquisar bloco</h2>
-
     <form action="/search" method="GET">
         <input type="text" placeholder="Pesquisar..." name="query">
-           <button type = "submit">Novo Bloco</button>
-           <button type = "submit" >Voltar</button>
+        <button type="submit">Pesquisar</button>
     </form>
-    
-</body>   
+ 
+    <br>
+    <button onclick="window.location.href='/'">Novo Bloco</button>
+   
+ 
+    <h2>Lista de Blocos</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Qtd. Apartamentos</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="listarblocos">
+       
+    </tbody>
+</table>
+ 
+<script>
+ async function listarblocos() {
+    try {
+        const response = await fetch('/listar');
+        const blocos = await response.json();
+        console.log('Blocos recebidos:', blocos); // Adicione esta linha
+
+        const listarblocos = document.getElementById('listarblocos');
+        listarblocos.innerHTML = '';
+
+        blocos.forEach(bloco => {
+            const row = `
+                <tr>
+                    <td>${bloco.bloco_id}</td>
+                    <td>${bloco.descricao}</td>
+                    <td>${bloco.qtd_apartamentos}</td>
+                    <td>
+                        <a href="/excluir/${bloco.bloco_id}">Excluir</a>
+                        <a href="/editar/${bloco.bloco_id}">Editar</a>
+                    </td>
+                </tr>
+            `;
+            listarblocos.innerHTML += row;
+        });
+    } catch (error) {
+        console.error('Erro ao carregar blocos:', error);
+    }
+}
+
+listarblocos();
+
+</script>
+ 
+</body>
 </html>
